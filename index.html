@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Interactivos</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">Juegos Interactivos</h1>
+            <p class="subtitle">Selecciona uno de los juegos para comenzar</p>
+        </header>
+        
+        <main class="games-container">
+            <div class="game-card" id="rps-game">
+                <div class="game-icon">✊✋✌️</div>
+                <h2>Piedra, Papel, Tijera</h2>
+                <p>El clásico juego de manos. ¡Gana 3 rondas para ser el campeón!</p>
+                <button class="play-btn" onclick="loadGame('rps')">Jugar</button>
+            </div>
+            
+            <div class="game-card" id="snake-game">
+                <div class="game-icon">🐍</div>
+                <h2>Snake</h2>
+                <p>Controla la serpiente y come la mayor cantidad de comida sin chocar.</p>
+                <button class="play-btn" onclick="loadGame('snake')">Jugar</button>
+            </div>
+        </main>
+        
+        <div id="game-area" class="game-area hidden">
+            <button id="back-btn" class="back-btn">← Volver al menú</button>
+            <div id="game-content"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script src="rps-game.js"></script>
+    <script src="snake-game.js"></script>
+</body>
+</html>
