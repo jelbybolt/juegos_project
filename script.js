@@ -26,11 +26,11 @@ function loadGame(gameType) {
                 <div class="rps-score">
                     <div class="score-box">
                         <div class="score-label">Jugador</div>
-                        <div class="score-value" id="player-score">0</div>
+                        <div class="score-value player-score" id="player-score">0</div>
                     </div>
                     <div class="score-box">
                         <div class="score-label">Computadora</div>
-                        <div class="score-value" id="computer-score">0</div>
+                        <div class="score-value computer-score" id="computer-score">0</div>
                     </div>
                 </div>
                 <div class="choices-container">
@@ -55,7 +55,9 @@ function loadGame(gameType) {
                 </div>
                 <div id="game-over-container" class="game-over hidden">
                     <h3 id="final-result">¡Has ganado!</h3>
-                    <button class="reset-btn" id="rps-reset-btn">Jugar de nuevo</button>
+                    <button class="reset-btn" id="rps-reset-btn">
+                        <i class="fas fa-redo"></i> Jugar de nuevo
+                    </button>
                 </div>
             </div>
         `;
@@ -64,7 +66,7 @@ function loadGame(gameType) {
     } else if (gameType === 'snake') {
         gameContent.innerHTML = `
             <div class="snake-container">
-                <h2 class="snake-title">Snake</h2>
+                <h2 class="snake-title">Snake Evolution</h2>
                 <div class="snake-game-info">
                     <div class="snake-score">
                         <div class="score-label">Puntuación</div>
@@ -79,13 +81,25 @@ function loadGame(gameType) {
                     <canvas id="snake-canvas" width="400" height="400"></canvas>
                 </div>
                 <div class="snake-controls">
-                    <button class="control-btn" id="start-btn">Iniciar Juego</button>
-                    <button class="control-btn" id="pause-btn">Pausar</button>
-                    <button class="control-btn" id="reset-btn">Reiniciar</button>
+                    <button class="control-btn primary" id="start-btn">
+                        <i class="fas fa-play"></i> Iniciar Juego
+                    </button>
+                    <button class="control-btn" id="pause-btn">
+                        <i class="fas fa-pause"></i> Pausar
+                    </button>
+                    <button class="control-btn" id="reset-btn">
+                        <i class="fas fa-redo"></i> Reiniciar
+                    </button>
                 </div>
                 <div class="snake-instructions">
-                    <h4>Instrucciones:</h4>
+                    <h4><i class="fas fa-info-circle"></i> Instrucciones:</h4>
                     <p>Usa las flechas del teclado para controlar la serpiente. Come la comida (roja) para crecer y ganar puntos. Evita chocar con las paredes o contigo mismo.</p>
+                    <ul>
+                        <li><strong>Flecha arriba:</strong> Mover hacia arriba</li>
+                        <li><strong>Flecha abajo:</strong> Mover hacia abajo</li>
+                        <li><strong>Flecha izquierda:</strong> Mover hacia la izquierda</li>
+                        <li><strong>Flecha derecha:</strong> Mover hacia la derecha</li>
+                    </ul>
                 </div>
             </div>
         `;

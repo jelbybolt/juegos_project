@@ -41,21 +41,33 @@ function initRPSGame() {
         playerChoiceIcon.textContent = getChoiceIcon(playerChoice);
         computerChoiceIcon.textContent = getChoiceIcon(computerChoice);
         
+        // Añadir animación
+        playerChoiceIcon.classList.add('pulse');
+        computerChoiceIcon.classList.add('pulse');
+        setTimeout(() => {
+            playerChoiceIcon.classList.remove('pulse');
+            computerChoiceIcon.classList.remove('pulse');
+        }, 500);
+        
         // Determinar el resultado
         const result = getRoundResult(playerChoice, computerChoice);
         
         // Actualizar puntuación y mostrar resultado
         if (result === 'win') {
             playerScore++;
-            roundResultText.textContent = '¡Ganaste esta ronda!';
-            roundResultText.style.color = '#4ecdc4';
+            roundResultText.textContent = '¡Ganaste esta ronda! 🎉';
+            roundResultText.style.color = 'var(--success)';
+            playerScoreElement.classList.add('celebrate');
+            setTimeout(() => playerScoreElement.classList.remove('celebrate'), 500);
         } else if (result === 'lose') {
             computerScore++;
-            roundResultText.textContent = 'La computadora ganó esta ronda';
-            roundResultText.style.color = '#ff6b6b';
+            roundResultText.textContent = 'La computadora ganó esta ronda 💻';
+            roundResultText.style.color = 'var(--danger)';
+            computerScoreElement.classList.add('celebrate');
+            setTimeout(() => computerScoreElement.classList.remove('celebrate'), 500);
         } else {
-            roundResultText.textContent = '¡Empate!';
-            roundResultText.style.color = '#f9ca24';
+            roundResultText.textContent = '¡Empate! 🤝';
+            roundResultText.style.color = 'var(--warning)';
         }
         
         // Actualizar puntuaciones
@@ -68,6 +80,7 @@ function initRPSGame() {
             showGameOver();
         } else {
             gameStatus.textContent = `Siguiente ronda...`;
+            gameStatus.style.color = 'var(--accent)';
         }
     }
     
@@ -108,14 +121,15 @@ function initRPSGame() {
     // Función para mostrar la pantalla de fin de juego
     function showGameOver() {
         if (playerScore > computerScore) {
-            finalResult.textContent = '¡Felicidades! Has ganado el juego';
-            finalResult.style.color = '#4ecdc4';
+            finalResult.textContent = '¡Felicidades! Has ganado el juego 🏆';
+            finalResult.className = 'win';
         } else {
-            finalResult.textContent = '¡La computadora ha ganado el juego!';
-            finalResult.style.color = '#ff6b6b';
+            finalResult.textContent = '¡La computadora ha ganado el juego! 🤖';
+            finalResult.className = 'lose';
         }
         
         gameOverContainer.classList.remove('hidden');
+        gameOverContainer.classList.add('celebrate');
     }
     
     // Evento para reiniciar el juego
@@ -129,10 +143,12 @@ function initRPSGame() {
         playerChoiceIcon.textContent = '❔';
         computerChoiceIcon.textContent = '❔';
         roundResultText.textContent = 'Elige una opción para comenzar';
-        roundResultText.style.color = '#fff';
+        roundResultText.style.color = 'var(--light)';
         gameStatus.textContent = 'Primero en ganar 3 rondas gana el juego';
+        gameStatus.style.color = 'var(--accent)';
         
         choiceButtons.forEach(btn => btn.classList.remove('selected'));
         gameOverContainer.classList.add('hidden');
+        gameOverContainer.classList.remove('celebrate');
     });
 }

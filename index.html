@@ -3,41 +3,906 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juegos Interactivos</title>
+    <title>Arcade Zone | Juegos Modernos</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos inline para asegurar funcionamiento */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #36D1DC;
+            --accent-2: #FFD166;
+            --dark: #1A1A2E;
+            --darker: #0F0F1B;
+            --dark-2: #16213E;
+            --light: #F5F5F7;
+            --success: #4ECDC4;
+            --warning: #FFD166;
+            --danger: #EF476F;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, var(--dark-2) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Partículas de fondo */
+        .particles-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(1) { width: 80px; height: 80px; top: 10%; left: 5%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 120px; height: 120px; top: 60%; right: 8%; animation-delay: -2s; }
+        .particle:nth-child(3) { width: 60px; height: 60px; bottom: 20%; left: 15%; animation-delay: -4s; }
+        .particle:nth-child(4) { width: 100px; height: 100px; top: 30%; right: 12%; animation-delay: -6s; }
+        .particle:nth-child(5) { width: 70px; height: 70px; top: 80%; left: 20%; animation-delay: -8s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-20px) rotate(90deg) scale(1.1); }
+            50% { transform: translateY(0) rotate(180deg) scale(1); }
+            75% { transform: translateY(20px) rotate(270deg) scale(0.9); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header Styles */
+        .main-header {
+            padding: 20px 0 40px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 15px rgba(108, 99, 255, 0.5));
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(108, 99, 255, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(245, 245, 247, 0.8);
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        /* Games Grid */
+        .games-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .game-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border-color: rgba(108, 99, 255, 0.3);
+        }
+
+        .game-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .game-card h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--light);
+            font-weight: 700;
+        }
+
+        .game-card p {
+            color: rgba(245, 245, 247, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .play-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .play-btn:hover::before {
+            left: 100%;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(108, 99, 255, 0.6);
+        }
+
+        /* Game Area */
+        .game-area {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(245, 245, 247, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .games-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .game-card {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Animaciones adicionales */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+    </style>
 </head>
 <body>
+    <!-- Fondo animado con partículas -->
+    <div class="particles-background">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <div class="container">
-        <header>
-            <h1 class="title">Juegos Interactivos</h1>
-            <p class="subtitle">Selecciona uno de los juegos para comenzar</p>
+        <header class="main-header">
+            <div class="logo">
+                <i class="fas fa-gamepad logo-icon"></i>
+                <h1 class="title">Arcade Zone</h1>
+            </div>
+            <p class="subtitle">Dos juegos clásicos con diseño moderno. ¡Elige tu aventura y demuestra tus habilidades!</p>
         </header>
         
         <main class="games-container">
+            <!-- Card Piedra, Papel, Tijera -->
             <div class="game-card" id="rps-game">
-                <div class="game-icon">✊✋✌️</div>
-                <h2>Piedra, Papel, Tijera</h2>
-                <p>El clásico juego de manos. ¡Gana 3 rondas para ser el campeón!</p>
-                <button class="play-btn" onclick="loadGame('rps')">Jugar</button>
+                <div class="game-icon">✊ ✋ ✌️</div>
+                <h2>Piedra, Papel, Tijera PRO</h2>
+                <p>El clásico juego de manos reinventado. Enfréntate a la IA en batallas épicas y demuestra quién es el verdadero campeón. ¡Gana 3 rondas para la victoria!</p>
+                <div style="margin: 25px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <span style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">
+                        <i class="fas fa-brain"></i> IA Inteligente
+                    </span>
+                    <span style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">
+                        <i class="fas fa-trophy"></i> Sistema de Logros
+                    </span>
+                </div>
+                <button class="play-btn" onclick="loadGame('rps')">
+                    <i class="fas fa-play"></i> Jugar Ahora
+                </button>
             </div>
             
+            <!-- Card Snake -->
             <div class="game-card" id="snake-game">
                 <div class="game-icon">🐍</div>
-                <h2>Snake</h2>
-                <p>Controla la serpiente y come la mayor cantidad de comida sin chocar.</p>
-                <button class="play-btn" onclick="loadGame('snake')">Jugar</button>
+                <h2>Snake Evolution</h2>
+                <p>Controla a tu serpiente en este adictivo juego clásico. Come, crece y domina la arena mientras evitas obstáculos mortales. ¡Supera tu récord!</p>
+                <div style="margin: 25px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                    <span style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">
+                        <i class="fas fa-arrows-alt"></i> Controles Suaves
+                    </span>
+                    <span style="background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">
+                        <i class="fas fa-medal"></i> Tabla de Líderes
+                    </span>
+                </div>
+                <button class="play-btn" onclick="loadGame('snake')">
+                    <i class="fas fa-play"></i> Jugar Ahora
+                </button>
             </div>
         </main>
         
+        <!-- Área de juego (oculta inicialmente) -->
         <div id="game-area" class="game-area hidden">
-            <button id="back-btn" class="back-btn">← Volver al menú</button>
+            <button id="back-btn" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Volver al Menú
+            </button>
             <div id="game-content"></div>
         </div>
+
+        <footer>
+            <p>Desarrollado con ❤️ usando HTML, CSS & JavaScript</p>
+        </footer>
     </div>
-    
-    <script src="script.js"></script>
-    <script src="rps-game.js"></script>
-    <script src="snake-game.js"></script>
+
+    <script>
+        // Script principal para manejar la navegación entre juegos
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.getElementById('back-btn');
+            const gameArea = document.getElementById('game-area');
+            const gamesContainer = document.querySelector('.games-container');
+            
+            backBtn.addEventListener('click', function() {
+                gameArea.classList.add('hidden');
+                gamesContainer.classList.remove('hidden');
+                document.getElementById('game-content').innerHTML = '';
+            });
+        });
+
+        function loadGame(gameType) {
+            const gameArea = document.getElementById('game-area');
+            const gamesContainer = document.querySelector('.games-container');
+            const gameContent = document.getElementById('game-content');
+            
+            gamesContainer.classList.add('hidden');
+            gameArea.classList.remove('hidden');
+            
+            if (gameType === 'rps') {
+                gameContent.innerHTML = `
+                    <div class="rps-container">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 2rem; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; color: transparent;">Piedra, Papel, Tijera</h2>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 3rem; background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 20px;">
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 1.1rem; color: rgba(245,245,247,0.7); margin-bottom: 0.8rem;">Jugador</div>
+                                <div style="font-size: 3.5rem; font-weight: 800; color: #4ECDC4;" id="player-score">0</div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 1.1rem; color: rgba(245,245,247,0.7); margin-bottom: 0.8rem;">Computadora</div>
+                                <div style="font-size: 3.5rem; font-weight: 800; color: #EF476F;" id="computer-score">0</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 3rem; flex-wrap: wrap;">
+                            <button class="choice-btn" data-choice="rock" style="background: rgba(255,255,255,0.05); border: 3px solid transparent; border-radius: 25px; padding: 2.5rem; font-size: 5rem; cursor: pointer; transition: all 0.3s ease; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;">✊</button>
+                            <button class="choice-btn" data-choice="paper" style="background: rgba(255,255,255,0.05); border: 3px solid transparent; border-radius: 25px; padding: 2.5rem; font-size: 5rem; cursor: pointer; transition: all 0.3s ease; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;">✋</button>
+                            <button class="choice-btn" data-choice="scissors" style="background: rgba(255,255,255,0.05); border: 3px solid transparent; border-radius: 25px; padding: 2.5rem; font-size: 5rem; cursor: pointer; transition: all 0.3s ease; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;">✌️</button>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 2.5rem; border-radius: 20px; margin-bottom: 2rem;">
+                            <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 2rem;">
+                                <div style="text-align: center; flex: 1;">
+                                    <div style="font-size: 6rem; margin-bottom: 1rem;" id="player-choice-icon">❔</div>
+                                    <div style="font-size: 1.2rem; color: rgba(245,245,247,0.8);">Tu elección</div>
+                                </div>
+                                <div style="font-size: 2rem; font-weight: 800; color: #36D1DC; margin: 0 2rem;">VS</div>
+                                <div style="text-align: center; flex: 1;">
+                                    <div style="font-size: 6rem; margin-bottom: 1rem;" id="computer-choice-icon">❔</div>
+                                    <div style="font-size: 1.2rem; color: rgba(245,245,247,0.8);">Computadora</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 2.2rem; font-weight: 700; margin-bottom: 1.2rem;" id="round-result-text">Elige una opción para comenzar</div>
+                            <div style="font-size: 1.5rem; color: #36D1DC;" id="game-status">Primero en ganar 3 rondas gana el juego</div>
+                        </div>
+                        <div id="game-over-container" style="text-align: center; background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 20px; margin-top: 2rem; display: none;">
+                            <h3 style="font-size: 2.5rem; margin-bottom: 1.5rem;" id="final-result">¡Has ganado!</h3>
+                            <button class="play-btn" id="rps-reset-btn" style="margin-top: 1.5rem;">
+                                <i class="fas fa-redo"></i> Jugar de nuevo
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                initRPSGame();
+            } else if (gameType === 'snake') {
+                gameContent.innerHTML = `
+                    <div class="snake-container">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 2rem; background: linear-gradient(45deg, #36D1DC, #6C63FF); -webkit-background-clip: text; background-clip: text; color: transparent;">Snake Evolution</h2>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 2rem; background: rgba(255,255,255,0.05); padding: 1.5rem 2rem; border-radius: 20px;">
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 1.1rem; color: rgba(245,245,247,0.7); margin-bottom: 0.5rem;">Puntuación</div>
+                                <div style="font-size: 2.5rem; font-weight: 800;" id="snake-score">0</div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 1.1rem; color: rgba(245,245,247,0.7); margin-bottom: 0.5rem;">Mejor Puntuación</div>
+                                <div style="font-size: 2.5rem; font-weight: 800;" id="snake-high-score">0</div>
+                            </div>
+                        </div>
+                        <div style="position: relative; margin: 0 auto 2rem; border-radius: 15px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 3px solid rgba(255,255,255,0.1);">
+                            <canvas id="snake-canvas" width="400" height="400" style="background: #0f3460; display: block;"></canvas>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem;">
+                            <button class="play-btn" id="start-btn" style="padding: 12px 25px;">
+                                <i class="fas fa-play"></i> Iniciar Juego
+                            </button>
+                            <button class="back-btn" id="pause-btn">
+                                <i class="fas fa-pause"></i> Pausar
+                            </button>
+                            <button class="back-btn" id="reset-btn">
+                                <i class="fas fa-redo"></i> Reiniciar
+                            </button>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 2rem; border-radius: 20px; margin-top: 2rem;">
+                            <h4 style="margin-bottom: 1rem; color: #36D1DC; display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-info-circle"></i> Instrucciones:
+                            </h4>
+                            <p style="color: rgba(245,245,247,0.8); line-height: 1.6; margin-bottom: 1rem;">
+                                Usa las flechas del teclado para controlar la serpiente. Come la comida (roja) para crecer y ganar puntos. Evita chocar con las paredes o contigo mismo.
+                            </p>
+                            <ul style="color: rgba(245,245,247,0.8); padding-left: 1.5rem; line-height: 1.6;">
+                                <li><strong>Flecha arriba:</strong> Mover hacia arriba</li>
+                                <li><strong>Flecha abajo:</strong> Mover hacia abajo</li>
+                                <li><strong>Flecha izquierda:</strong> Mover hacia la izquierda</li>
+                                <li><strong>Flecha derecha:</strong> Mover hacia la derecha</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                initSnakeGame();
+            }
+        }
+
+        // Juego de Piedra, Papel, Tijera
+        function initRPSGame() {
+            let playerScore = 0;
+            let computerScore = 0;
+            let gameOver = false;
+            
+            const playerScoreElement = document.getElementById('player-score');
+            const computerScoreElement = document.getElementById('computer-score');
+            const playerChoiceIcon = document.getElementById('player-choice-icon');
+            const computerChoiceIcon = document.getElementById('computer-choice-icon');
+            const roundResultText = document.getElementById('round-result-text');
+            const gameStatus = document.getElementById('game-status');
+            const gameOverContainer = document.getElementById('game-over-container');
+            const finalResult = document.getElementById('final-result');
+            const resetBtn = document.getElementById('rps-reset-btn');
+            
+            const choiceButtons = document.querySelectorAll('.choice-btn');
+            
+            // Asignar eventos a los botones de elección
+            choiceButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (gameOver) return;
+                    
+                    const playerChoice = this.getAttribute('data-choice');
+                    playRound(playerChoice);
+                });
+            });
+            
+            // Función para jugar una ronda
+            function playRound(playerChoice) {
+                // Remover selección anterior
+                choiceButtons.forEach(btn => {
+                    btn.style.borderColor = 'transparent';
+                    btn.style.background = 'rgba(255,255,255,0.05)';
+                });
+                
+                // Marcar la elección actual
+                const currentBtn = document.querySelector(`[data-choice="${playerChoice}"]`);
+                currentBtn.style.borderColor = '#36D1DC';
+                currentBtn.style.background = 'rgba(54, 209, 220, 0.1)';
+                currentBtn.style.boxShadow = '0 0 30px rgba(54, 209, 220, 0.6)';
+                
+                // Elección de la computadora
+                const computerChoice = getComputerChoice();
+                
+                // Mostrar elecciones
+                playerChoiceIcon.textContent = getChoiceIcon(playerChoice);
+                computerChoiceIcon.textContent = getChoiceIcon(computerChoice);
+                
+                // Añadir animación
+                playerChoiceIcon.classList.add('pulse');
+                computerChoiceIcon.classList.add('pulse');
+                setTimeout(() => {
+                    playerChoiceIcon.classList.remove('pulse');
+                    computerChoiceIcon.classList.remove('pulse');
+                }, 500);
+                
+                // Determinar el resultado
+                const result = getRoundResult(playerChoice, computerChoice);
+                
+                // Actualizar puntuación y mostrar resultado
+                if (result === 'win') {
+                    playerScore++;
+                    roundResultText.textContent = '¡Ganaste esta ronda! 🎉';
+                    roundResultText.style.color = '#4ECDC4';
+                    playerScoreElement.classList.add('pulse');
+                    setTimeout(() => playerScoreElement.classList.remove('pulse'), 500);
+                } else if (result === 'lose') {
+                    computerScore++;
+                    roundResultText.textContent = 'La computadora ganó esta ronda 💻';
+                    roundResultText.style.color = '#EF476F';
+                    computerScoreElement.classList.add('pulse');
+                    setTimeout(() => computerScoreElement.classList.remove('pulse'), 500);
+                } else {
+                    roundResultText.textContent = '¡Empate! 🤝';
+                    roundResultText.style.color = '#FFD166';
+                }
+                
+                // Actualizar puntuaciones
+                playerScoreElement.textContent = playerScore;
+                computerScoreElement.textContent = computerScore;
+                
+                // Verificar si el juego ha terminado
+                if (playerScore === 3 || computerScore === 3) {
+                    gameOver = true;
+                    showGameOver();
+                } else {
+                    gameStatus.textContent = `Siguiente ronda...`;
+                    gameStatus.style.color = '#36D1DC';
+                }
+            }
+            
+            // Función para obtener la elección de la computadora
+            function getComputerChoice() {
+                const choices = ['rock', 'paper', 'scissors'];
+                const randomIndex = Math.floor(Math.random() * 3);
+                return choices[randomIndex];
+            }
+            
+            // Función para determinar el resultado de la ronda
+            function getRoundResult(player, computer) {
+                if (player === computer) {
+                    return 'tie';
+                }
+                
+                if (
+                    (player === 'rock' && computer === 'scissors') ||
+                    (player === 'paper' && computer === 'rock') ||
+                    (player === 'scissors' && computer === 'paper')
+                ) {
+                    return 'win';
+                }
+                
+                return 'lose';
+            }
+            
+            // Función para obtener el icono correspondiente a la elección
+            function getChoiceIcon(choice) {
+                switch(choice) {
+                    case 'rock': return '✊';
+                    case 'paper': return '✋';
+                    case 'scissors': return '✌️';
+                    default: return '❔';
+                }
+            }
+            
+            // Función para mostrar la pantalla de fin de juego
+            function showGameOver() {
+                if (playerScore > computerScore) {
+                    finalResult.textContent = '¡Felicidades! Has ganado el juego 🏆';
+                    finalResult.style.color = '#4ECDC4';
+                } else {
+                    finalResult.textContent = '¡La computadora ha ganado el juego! 🤖';
+                    finalResult.style.color = '#EF476F';
+                }
+                
+                gameOverContainer.style.display = 'block';
+                gameOverContainer.classList.add('pulse');
+            }
+            
+            // Evento para reiniciar el juego
+            resetBtn.addEventListener('click', function() {
+                playerScore = 0;
+                computerScore = 0;
+                gameOver = false;
+                
+                playerScoreElement.textContent = '0';
+                computerScoreElement.textContent = '0';
+                playerChoiceIcon.textContent = '❔';
+                computerChoiceIcon.textContent = '❔';
+                roundResultText.textContent = 'Elige una opción para comenzar';
+                roundResultText.style.color = '#F5F5F7';
+                gameStatus.textContent = 'Primero en ganar 3 rondas gana el juego';
+                gameStatus.style.color = '#36D1DC';
+                
+                choiceButtons.forEach(btn => {
+                    btn.style.borderColor = 'transparent';
+                    btn.style.background = 'rgba(255,255,255,0.05)';
+                    btn.style.boxShadow = 'none';
+                });
+                gameOverContainer.style.display = 'none';
+                gameOverContainer.classList.remove('pulse');
+            });
+        }
+
+        // Juego de Snake
+        function initSnakeGame() {
+            const canvas = document.getElementById('snake-canvas');
+            const ctx = canvas.getContext('2d');
+            const scoreElement = document.getElementById('snake-score');
+            const highScoreElement = document.getElementById('snake-high-score');
+            const startBtn = document.getElementById('start-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            
+            // Configuración del juego
+            const gridSize = 20;
+            const tileCount = canvas.width / gridSize;
+            
+            // Estado del juego
+            let snake = [];
+            let food = {};
+            let dx = 0;
+            let dy = 0;
+            let score = 0;
+            let highScore = localStorage.getItem('snakeHighScore') || 0;
+            let gameRunning = false;
+            let gameLoop;
+            
+            // Inicializar el juego
+            function init() {
+                // Configurar serpiente inicial
+                snake = [
+                    {x: 10, y: 10}
+                ];
+                
+                // Generar comida
+                generateFood();
+                
+                // Reiniciar dirección
+                dx = 0;
+                dy = 0;
+                
+                // Reiniciar puntuación
+                score = 0;
+                updateScore();
+                
+                // Actualizar mejor puntuación
+                highScoreElement.textContent = highScore;
+                
+                // Dibujar el estado inicial
+                draw();
+            }
+            
+            // Generar comida en una posición aleatoria
+            function generateFood() {
+                food = {
+                    x: Math.floor(Math.random() * tileCount),
+                    y: Math.floor(Math.random() * tileCount)
+                };
+                
+                // Asegurarse de que la comida no aparezca en la serpiente
+                for (let segment of snake) {
+                    if (segment.x === food.x && segment.y === food.y) {
+                        generateFood();
+                        break;
+                    }
+                }
+            }
+            
+            // Actualizar puntuación
+            function updateScore() {
+                scoreElement.textContent = score;
+                if (score > highScore) {
+                    highScore = score;
+                    highScoreElement.textContent = highScore;
+                    localStorage.setItem('snakeHighScore', highScore);
+                    highScoreElement.classList.add('pulse');
+                    setTimeout(() => highScoreElement.classList.remove('pulse'), 1000);
+                }
+            }
+            
+            // Dibujar el juego
+            function draw() {
+                // Limpiar canvas
+                ctx.fillStyle = '#0f3460';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Dibujar serpiente
+                ctx.fillStyle = '#4ECDC4';
+                for (let i = 0; i < snake.length; i++) {
+                    const segment = snake[i];
+                    
+                    // Cabeza de la serpiente
+                    if (i === 0) {
+                        ctx.fillStyle = '#4ECDC4';
+                        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+                        
+                        // Ojos
+                        ctx.fillStyle = '#FFF';
+                        ctx.fillRect(segment.x * gridSize + 5, segment.y * gridSize + 5, 4, 4);
+                        ctx.fillRect(segment.x * gridSize + 11, segment.y * gridSize + 5, 4, 4);
+                    } else {
+                        // Cuerpo de la serpiente
+                        ctx.fillStyle = '#36D1DC';
+                        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
+                    }
+                }
+                
+                // Dibujar comida
+                ctx.fillStyle = '#FF6584';
+                ctx.beginPath();
+                ctx.arc(
+                    food.x * gridSize + gridSize / 2,
+                    food.y * gridSize + gridSize / 2,
+                    gridSize / 2 - 2,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            // Actualizar el estado del juego
+            function update() {
+                if (!gameRunning) return;
+                
+                // Calcular nueva posición de la cabeza
+                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+                
+                // Verificar colisión con las paredes
+                if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
+                    gameOver();
+                    return;
+                }
+                
+                // Verificar colisión con el cuerpo
+                for (let i = 1; i < snake.length; i++) {
+                    if (head.x === snake[i].x && head.y === snake[i].y) {
+                        gameOver();
+                        return;
+                    }
+                }
+                
+                // Agregar nueva cabeza
+                snake.unshift(head);
+                
+                // Verificar si comió la comida
+                if (head.x === food.x && head.y === food.y) {
+                    // Incrementar puntuación
+                    score += 10;
+                    updateScore();
+                    
+                    // Generar nueva comida
+                    generateFood();
+                    
+                    // Efecto visual al comer
+                    scoreElement.classList.add('pulse');
+                    setTimeout(() => scoreElement.classList.remove('pulse'), 300);
+                } else {
+                    // Remover cola si no comió
+                    snake.pop();
+                }
+                
+                // Dibujar el nuevo estado
+                draw();
+            }
+            
+            // Manejar fin del juego
+            function gameOver() {
+                gameRunning = false;
+                clearInterval(gameLoop);
+                alert(`¡Juego terminado! 🐍\nTu puntuación: ${score}\nMejor puntuación: ${highScore}`);
+            }
+            
+            // Manejar eventos de teclado
+            document.addEventListener('keydown', function(e) {
+                // Prevenir el comportamiento por defecto de las teclas de flecha
+                if ([37, 38, 39, 40].includes(e.keyCode)) {
+                    e.preventDefault();
+                }
+                
+                // Cambiar dirección según la tecla presionada
+                switch(e.keyCode) {
+                    case 37: // Izquierda
+                        if (dx !== 1) {
+                            dx = -1;
+                            dy = 0;
+                        }
+                        break;
+                    case 38: // Arriba
+                        if (dy !== 1) {
+                            dx = 0;
+                            dy = -1;
+                        }
+                        break;
+                    case 39: // Derecha
+                        if (dx !== -1) {
+                            dx = 1;
+                            dy = 0;
+                        }
+                        break;
+                    case 40: // Abajo
+                        if (dy !== -1) {
+                            dx = 0;
+                            dy = 1;
+                        }
+                        break;
+                }
+            });
+            
+            // Eventos de botones
+            startBtn.addEventListener('click', function() {
+                if (!gameRunning) {
+                    gameRunning = true;
+                    // Si es el primer movimiento, establecer dirección inicial
+                    if (dx === 0 && dy === 0) {
+                        dx = 1; // Empezar moviéndose a la derecha
+                    }
+                    gameLoop = setInterval(update, 150);
+                    startBtn.innerHTML = '<i class="fas fa-play"></i> Reanudar';
+                }
+            });
+            
+            pauseBtn.addEventListener('click', function() {
+                gameRunning = !gameRunning;
+                if (gameRunning) {
+                    gameLoop = setInterval(update, 150);
+                    pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+                } else {
+                    clearInterval(gameLoop);
+                    pauseBtn.innerHTML = '<i class="fas fa-play"></i> Reanudar';
+                }
+            });
+            
+            resetBtn.addEventListener('click', function() {
+                clearInterval(gameLoop);
+                gameRunning = false;
+                startBtn.innerHTML = '<i class="fas fa-play"></i> Iniciar Juego';
+                pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar';
+                init();
+            });
+            
+            // Inicializar el juego al cargar
+            init();
+        }
+    </script>
 </body>
 </html>
